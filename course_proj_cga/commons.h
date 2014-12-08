@@ -48,11 +48,11 @@ typedef struct Point
 	GLdouble	RGB[3];
 } Point;
 
-typedef struct KinemPair
+class KP
 {
 	GLdouble ** A;
-	GLdouble a,q,d,alpha;
-}KP;
+	GLdouble a, q, d, alpha, minRotAngle, maxRotAngle;
+};
 
 class Light {
 public:
