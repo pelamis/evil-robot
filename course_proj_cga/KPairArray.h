@@ -7,11 +7,15 @@
 
 class KPairArray
 {
-private:
-	KinematicPair *array;
+	//make the class fields private!
 public:
+	KinematicPair *array;
+	int length;
+
 	KPairArray();
 	~KPairArray();
+	int getLength();
+	GLdouble ** getTForPair(int pairNumber);
 };
 
 #endif

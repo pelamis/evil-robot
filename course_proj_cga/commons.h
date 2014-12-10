@@ -37,21 +37,10 @@ typedef struct Point
 	GLdouble	RGB[3];
 } Point;
 
-typedef struct KinemPair
-{
-public:
-	GLdouble ** A;
-	GLdouble a,q,d,alpha,minAngle,maxAngle;
-	bool isMoving;
-}KP;
-
-void buildAMatr(KP *nodeArray);
-void init(KP *nodeArray);
 void setMatr(GLdouble ** dst, GLdouble ** src, int ord);
 void mul(GLdouble ** m1, GLdouble ** m2);
 
 void drawAxis();
-void drawKP(KP *nodeArray);
 void drawBackground();
 
 #endif

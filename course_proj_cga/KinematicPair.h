@@ -14,11 +14,11 @@ public:
 	KinematicPair();
 	void reInit(GLdouble a, GLdouble q, GLdouble d, GLdouble alpha, GLdouble minAngle, GLdouble maxAngle);				//CHK
 	~KinematicPair();
-	void setAMatrix();				//CHK
-	int setQ(GLdouble q);			//CHK
+	void setAMatrix();				
+	int setQ(GLdouble q);			
 	int checkQ();
-	void drawKP();					//CHK
-	void moveKP();					//CHK
+	void drawKP();					
+	void moveKP();					
 	void setDQ(GLdouble newDQ);
 	bool checkMove();
 	void moveEnable();

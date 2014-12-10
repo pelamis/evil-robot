@@ -1,9 +1,8 @@
+#include "KPairArray.h"
 #include "KinematicPair.h"
 #include "Light.h"
 #include <random>
 #include <time.h>
-
-GLdouble /*PROJ_ANGLE=45*M_PI/180,*/t=0;
 
 GLdouble SPEED = M_PI / 100000;
 GLdouble SPEED2 = M_PI / 10000;
@@ -19,8 +18,7 @@ d0[4] = { 1, 1, 1, 1 },
 s0[4] = { 1, 1, 1, 1 },
 sd0[3] = { 0, 0, -1 };
 
-KP KPArray[KP_NUMBER];
-KinematicPair *KPArray2;
+KPairArray *KPArray2;
 
 Light l0(lcolr0, n0, pos0, a0, d0, s0, sd0, 0, M_PI, 1, 1, 1);
 
@@ -141,35 +139,33 @@ void drawKP2()
 {
 	char i, j;
 	GLdouble** T = new PGLdouble[4];
-	GLdouble** identity = new PGLdouble[4];
-	for (i = 0; i < 4; i++) T[i] = new GLdouble[4], identity[i]=new GLdouble[4];
-	for (i = 0; i < 4; i++)
-	for (j = 0; j < 4; j++) identity[i][j] = (i == j);
-	setMatr(T, identity, 4);
+	//for (i = 0; i < 4; i++) T[i] = new GLdouble[4];
+	//for (i = 0; i < 4; i++)
+	//for (j = 0; j < 4; j++) T[i][j] = (i == j);
+
 	glPointSize(10.0);
 	for (i = 0; i < KP_NUMBER; i++)
 	{
 		//glColor3d(1, 1, 0);
 		//glVertex3d(T[0][3], T[1][3], T[2][3]);
-		mul(T, KPArray2[i].A);
+	//	mul(T, KPArray2[i].A);
+		
 		glBegin(GL_POINTS);
 		glColor3d(0, 1, 1);
 		glVertex3d(T[0][3], T[1][3], T[2][3]);
 		glEnd();
 		
 	}
-	
 	for (i = 0; i < 4; i++) delete T[i];
 	delete T;
-	for (i = 0; i < 4; i++) delete identity[i];
-	delete identity;
+
 }
 
 void draw()
 {
 	int i;
 	GLdouble side=(A<C?A:C)/2;
-	l0.Enable();
+//	l0.Enable();
 	//l0.Disable();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
