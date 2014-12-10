@@ -82,14 +82,18 @@
   <ItemGroup>
     <ClInclude Include="commons.h" />
     <ClInclude Include="KinematicPair.h" />
+    <ClInclude Include="KPairArray.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="Link.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cga002.cpp" />
     <ClCompile Include="KinematicPair.cpp" />
+    <ClCompile Include="KPairArray.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="Link.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,7 +1,7 @@
 #include "Light.h"
 
 
-GLfloat ma[4] = { 0.2, 0.5, 0.5, 1 };
+GLfloat ma[4] = { 0.5, 0.5, 0.5, 1 };
 GLfloat md[4] = { 0.2, 0.2, 0.8, 1 };
 GLfloat ms[4] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat shine[1] = { 63 };
@@ -65,4 +65,13 @@ Light::Light(GLfloat *color, GLfloat *n, GLfloat *pos, GLfloat *a, GLfloat *d, G
 		glLightfv(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, &kq);
 	
 		glLightModelfv(GL_AMBIENT, ascene);
+
+		glEnable(GL_LIGHTING);
+		glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+		glEnable(GL_LIGHT0);
+	}
+
+	void Light::Disable() {
+		glDisable(GL_LIGHT0);
+		glDisable(GL_LIGHTING);
 	}
