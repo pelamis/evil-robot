@@ -32,7 +32,7 @@ void KinematicPair::reInit(GLdouble a, GLdouble q, GLdouble d, GLdouble alpha, G
 	this->alpha = alpha;
 	this->minAngle = minAngle;
 	this->maxAngle = maxAngle;
-	this->dq = M_PI / 100000;
+	this->dq = M_PI / 10000;
 	this->isMoving = false;
 
 	this->A=new GLdouble*[4];
@@ -115,6 +115,7 @@ void KinematicPair::moveKP()
 		if (result == 1) setDQ(-dq);
 		if (result == -1) setDQ(abs(dq));
 	}
+	setAMatrix();
 }
 
 void KinematicPair::setDQ(GLdouble newDQ)

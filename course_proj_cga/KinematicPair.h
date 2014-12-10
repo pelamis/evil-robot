@@ -1,5 +1,6 @@
 #pragma once
 #include "commons.h"
+//#define ROT_SPEED=M_
 
 class KinematicPair
 {
