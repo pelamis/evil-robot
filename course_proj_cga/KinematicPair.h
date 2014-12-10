@@ -16,14 +16,10 @@ public:
 	void reInit(GLdouble a, GLdouble q, GLdouble d, GLdouble alpha, GLdouble minAngle, GLdouble maxAngle);				//CHK
 	~KinematicPair();
 	void setAMatrix();				
-	int setQ(GLdouble q);			
-	int checkQ();
-	void drawKP();					
+	int setQ(GLdouble q);							
 	void moveKP();					
 	void setDQ(GLdouble newDQ);
 	bool checkMove();
-	void moveEnable();
-	void moveDisable();
 	void moveSwitch();
 };
 

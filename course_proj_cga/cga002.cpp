@@ -103,29 +103,27 @@ static void keyboard_callback(GLFWwindow* window, int key, int scancode, int act
 	}
 	if ((key == GLFW_KEY_1)&&(action==GLFW_PRESS))
 	{
-		KPArray2[0].moveSwitch();
+		KPArray2->getPair(0).moveSwitch();
 	}
 	if ((key == GLFW_KEY_2)&&(action==GLFW_PRESS))
 	{
-		KPArray2[1].moveSwitch();
+		KPArray2->getPair(1).moveSwitch();
 	}
 	if ((key == GLFW_KEY_3)&&(action==GLFW_PRESS))
 	{
-		KPArray2[2].moveSwitch();
+		KPArray2->getPair(2).moveSwitch();
 	}
 	if ((key == GLFW_KEY_4)&&(action==GLFW_PRESS))
 	{
-		KPArray2[3].moveSwitch();
+		KPArray2->getPair(3).moveSwitch();
 	}
-
 	if ((key == GLFW_KEY_5) && (action == GLFW_PRESS))
 	{
-		KPArray2[4].moveSwitch();
+		KPArray2->getPair(4).moveSwitch();
 	}
-
 	if ((key == GLFW_KEY_6) && (action == GLFW_PRESS))
 	{
-		KPArray2[5].moveSwitch();
+		KPArray2->getPair(5).moveSwitch();
 	}
 
 }
@@ -137,27 +135,28 @@ static void error_callback(int error, const char* description)
 
 void drawKP2()
 {
-	char i, j;
-	GLdouble** T = new PGLdouble[4];
+	char i;//, j;
+	//GLdouble** T = new PGLdouble[4];
 	//for (i = 0; i < 4; i++) T[i] = new GLdouble[4];
 	//for (i = 0; i < 4; i++)
 	//for (j = 0; j < 4; j++) T[i][j] = (i == j);
 
-	glPointSize(10.0);
-	for (i = 0; i < KP_NUMBER; i++)
+	//glPointSize(10.0);
+	for (i = 0; i < KPArray2->getLength(); i++)
 	{
+		KPArray2->drawPair(i);
 		//glColor3d(1, 1, 0);
 		//glVertex3d(T[0][3], T[1][3], T[2][3]);
 	//	mul(T, KPArray2[i].A);
 		
-		glBegin(GL_POINTS);
-		glColor3d(0, 1, 1);
-		glVertex3d(T[0][3], T[1][3], T[2][3]);
-		glEnd();
+	//	glBegin(GL_POINTS);
+	//	glColor3d(0, 1, 1);
+	//	glVertex3d(T[0][3], T[1][3], T[2][3]);
+	//	glEnd();
 		
 	}
-	for (i = 0; i < 4; i++) delete T[i];
-	delete T;
+	//for (i = 0; i < 4; i++) delete T[i];
+	//delete T;
 
 }
 
@@ -180,8 +179,10 @@ void draw()
 	drawAxis();
 
 	//drawKP(KPArray);
-	drawKP2();
-	for (i = 0; i < KP_NUMBER; i++) KPArray2[i].moveKP();
+	//drawKP2();
+	for (i = 0; i < KPArray2->getLength(); i++) KPArray2->drawPair(i);
+	for (i = 0; i < KPArray2->getLength(); i++)KPArray2->getPair(i).moveKP();
+	
 	//move(KPArray);	
 }
 
@@ -202,7 +203,7 @@ KinematicPair * init()
 int main(int argc, _TCHAR* argv[])
 {
 	int i, k;
-	KPArray2 = init();
+	KPArray2 = new KPairArray();
 	
 	// initialise GLFW
     if(!glfwInit())

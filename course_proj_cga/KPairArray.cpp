@@ -41,3 +41,23 @@ GLdouble ** KPairArray::getTForPair(int pairNumber)
 	for (i = 0; i < pairNumber; i++) mul(T, array[i].A);
 	return T;
 }
+
+KinematicPair & KPairArray::getPair(int pairNumber)
+{
+	return array[pairNumber];
+}
+
+void KPairArray::drawPair(int pairNumber)
+{
+	int i;
+	GLdouble **T = getTForPair(pairNumber);
+	
+	glPointSize(10.0);
+	glBegin(GL_POINTS);
+		glColor3d(0, 1, 1);
+		glVertex3d(T[0][3], T[1][3], T[2][3]);
+	glEnd();
+
+	for (i = 0; i < 4; i++) delete T[i];
+	delete T;
+}

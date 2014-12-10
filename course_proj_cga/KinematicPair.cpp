@@ -96,16 +96,6 @@ int KinematicPair::setQ(GLdouble q)
 	return qWasNotCorrect;
 }
 
-int KinematicPair::checkQ()
-{
-	return 0;
-}
-
-void KinematicPair::drawKP()
-{
-	
-}
-
 void KinematicPair::moveKP()
 {
 	int result;
@@ -123,19 +113,9 @@ void KinematicPair::setDQ(GLdouble newDQ)
 	this->dq = newDQ;
 }
 
-void KinematicPair::moveEnable()
-{
-	this->isMoving = true;
-}
-
 bool KinematicPair::checkMove()
 {
 	return (isMoving);
-}
-
-void KinematicPair::moveDisable()
-{
-	this->isMoving = false;
 }
 
 void KinematicPair::moveSwitch()
