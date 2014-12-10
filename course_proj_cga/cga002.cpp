@@ -1,7 +1,6 @@
-#include "commons.h"
-#include "stdafx.h"
+#include "KinematicPair.h"
+#include "Light.h"
 #include <random>
-#include "stdafx.h"
 #include <time.h>
 
 GLdouble /*PROJ_ANGLE=45*M_PI/180,*/t=0;
@@ -10,8 +9,18 @@ GLdouble SPEED = M_PI / 100000;
 GLdouble SPEED2 = M_PI / 10000;
 GLint pMode=GL_LINE; 
 GLint flag[5] = {0,0,0,0,0};
+GLdouble PI = M_PI;
+GLdouble A = SCREEN_WIDTH / 4.0, B = 0.0, C = SCREEN_HEIGHT / 2.0, D = C;
+GLfloat lcolr0[3] = { 1, 1, 1 },
+n0[3] = { 1, 1, 0 },
+pos0[4] = { 10, 10, 10, 0 },
+a0[4] = { 0.2, 0.2, 0.2, 1 },
+d0[4] = { 1, 1, 1, 1 },
+s0[4] = { 1, 1, 1, 1 },
+sd0[3] = { 0, 0, -1 };
 
 KP KPArray[KP_NUMBER];
+KinematicPair *KPArray2;
 
 Light l0(lcolr0, n0, pos0, a0, d0, s0, sd0, 0, M_PI, 1, 1, 1);
 
@@ -90,36 +99,35 @@ static void keyboard_callback(GLFWwindow* window, int key, int scancode, int act
 	{
 			movef(0, 10, 0);
 	}
-
 	if (key == GLFW_KEY_DOWN)
 	{
 		movef(0, -10, 0);
 	}
 	if ((key == GLFW_KEY_1)&&(action==GLFW_PRESS))
 	{
-		flag[0] = (flag[0] == 0);
+		KPArray2[0].moveSwitch();
 	}
 	if ((key == GLFW_KEY_2)&&(action==GLFW_PRESS))
 	{
-		flag[1] = (flag[1] == 0);
+		KPArray2[1].moveSwitch();
 	}
 	if ((key == GLFW_KEY_3)&&(action==GLFW_PRESS))
 	{
-		flag[2] = (flag[2] == 0);
+		KPArray2[2].moveSwitch();
 	}
 	if ((key == GLFW_KEY_4)&&(action==GLFW_PRESS))
 	{
-		flag[3] = (flag[3] == 0);
+		KPArray2[3].moveSwitch();
 	}
 
 	if ((key == GLFW_KEY_5) && (action == GLFW_PRESS))
 	{
-		flag[4] = (flag[4] == 0);
+		KPArray2[4].moveSwitch();
 	}
 
 	if ((key == GLFW_KEY_6) && (action == GLFW_PRESS))
 	{
-		flag[5] = (flag[5] == 0);
+		KPArray2[5].moveSwitch();
 	}
 
 }
@@ -129,43 +137,77 @@ static void error_callback(int error, const char* description)
 	fputs(description, stderr);
 }
 
-void move(KP *nodeArray)
+void drawKP2()
 {
-	char i;
-
+	char i, j;
+	GLdouble** T = new PGLdouble[4];
+	GLdouble** identity = new PGLdouble[4];
+	for (i = 0; i < 4; i++) T[i] = new GLdouble[4], identity[i]=new GLdouble[4];
+	for (i = 0; i < 4; i++)
+	for (j = 0; j < 4; j++) identity[i][j] = (i == j);
+	setMatr(T, identity, 4);
+	glPointSize(10.0);
 	for (i = 0; i < KP_NUMBER; i++)
 	{
-		if (nodeArray[i].q >= MAXANGLE) SPEED2 = -SPEED2;
-		if (nodeArray[i].q <= -MAXANGLE) SPEED2 = abs(SPEED2);
-		if (flag[i]) nodeArray[i].q += SPEED2;
+		//glColor3d(1, 1, 0);
+		//glVertex3d(T[0][3], T[1][3], T[2][3]);
+		mul(T, KPArray2[i].A);
+		glBegin(GL_POINTS);
+		glColor3d(0, 1, 1);
+		glVertex3d(T[0][3], T[1][3], T[2][3]);
+		glEnd();
 		
 	}
-	buildAMatr(nodeArray);
-	//опросить все пары
-	//изменить q
+	
+	for (i = 0; i < 4; i++) delete T[i];
+	delete T;
+	for (i = 0; i < 4; i++) delete identity[i];
+	delete identity;
 }
 
 void draw()
 {
+	int i;
 	GLdouble side=(A<C?A:C)/2;
 	l0.Enable();
+	//l0.Disable();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 //resize here
 	glPushMatrix();
 	glLoadIdentity();
 	//glTranslatef(A, 0, C/10);
 	glPopMatrix();
 // draw here
+
 	drawBackground();
 	drawAxis();
-	drawKP(KPArray);
-	move(KPArray);	
+
+	//drawKP(KPArray);
+	drawKP2();
+	for (i = 0; i < KP_NUMBER; i++) KPArray2[i].moveKP();
+	//move(KPArray);	
+}
+
+KinematicPair * init()
+{
+	KinematicPair *KPArray2 = new KinematicPair[KP_NUMBER];
+	int i;
+	GLdouble a_init[KP_NUMBER]		= { 0, A1, A2, 0, 0, 0 };
+	GLdouble q_init[KP_NUMBER]		= { M_PI_2, 0, M_PI_2, 0, 0, 0 };
+	GLdouble d_init[KP_NUMBER]		= { 0, D1, 0, D3, 0, D5 };
+	GLdouble alpha_init[KP_NUMBER]	= { -M_PI_2, 0, M_PI_2, -M_PI_2, M_PI_2, 0 };
+	GLdouble minq_init[KP_NUMBER]	= { -160, -225, -45, -110, -100, -266 };
+	GLdouble maxq_init[KP_NUMBER]	= { 160, 45, 225, 170, 100, 266 };
+	for (i = 0; i < KP_NUMBER; i++) KPArray2[i].reInit(a_init[i],q_init[i],d_init[i],alpha_init[i],DEG_TO_RAD*minq_init[i],DEG_TO_RAD*maxq_init[i]);
+	return KPArray2;
 }
 
 int main(int argc, _TCHAR* argv[])
 {
 	int i, k;
-	init(KPArray);
+	KPArray2 = init();
+	
 	// initialise GLFW
     if(!glfwInit())
 	{
@@ -215,9 +257,7 @@ int main(int argc, _TCHAR* argv[])
 	glfwDestroyWindow(window);
 
 	// clean up and exit
-	for (k = 0; k < KP_NUMBER;k++)
-		for (i = 0; i < 4; i++) delete KPArray[k].A[i];
-		delete KPArray[k].A;
+	
     glfwTerminate();
 
 	return 0;
@@ -250,70 +290,6 @@ void drawBackground()
 	glVertex3d(A*4,A*4,5);
 	glVertex3d(A * 4, 0, 5);
 	glEnd();
-}
-
-void drawKP(KP *nodeArray)
-{
-	char i,j;
-	GLdouble** T = new PGLdouble[4];
-	for (i = 0; i < 4; i++) T[i] = new GLdouble[4];
-	setMatr(T, nodeArray[0].A, 4);
-	glLineWidth(5);
-	glBegin(GL_LINES);
-	//mul(T, nodeArray[1].A);
-		for (i = 1; i < KP_NUMBER-1; i++)
-		{
-			glColor3d(1, 1, 0);
-			glVertex3d(T[0][3], T[1][3], T[2][3]);
-			mul(T, nodeArray[i+1].A);
-			glColor3d(1, 0, 0);
-			glVertex3d(T[0][3], T[1][3], T[2][3]);
-		}
-	glEnd();
-	glLineWidth(2);
-	for (i = 0; i < 4; i++) delete T[i];
-	delete T;
-}
-
-void init(KP *nodeArray)
-{
-	char i,j,k;
-	for (i = 0; i < KP_NUMBER; i++)
-	{
-		nodeArray[i].a = 0;
-		nodeArray[i].d = 0;
-		nodeArray[i].q = 0;
-		nodeArray[i].alpha = 0;
-
-		nodeArray[i].A=new PGLdouble[4];
-		for (j = 0; j < 4; j++) nodeArray[i].A[j] = new GLdouble[4];
-	}
-
-	for (i = 0; i < KP_NUMBER;i++)
-	for (j = 0; j < 4; j++)
-	for (k = 0; k < 4;k++)
-	{
-		nodeArray[i].A[j][k] = 0;
-	}
-
-	nodeArray[0].alpha = -(M_PI / 2);
-	nodeArray[0].q = M_PI / 2;
-
-	nodeArray[1].d = D1;
-	nodeArray[1].a = A1;
-
-	nodeArray[2].a = A2;
-	nodeArray[2].alpha = M_PI / 2;
-	nodeArray[2].q = M_PI / 2;
-
-	nodeArray[3].d = D3;
-	nodeArray[3].alpha = -(M_PI / 2);
-
-	nodeArray[4].alpha = M_PI / 2;
-	
-	nodeArray[5].d = D5;
-	
-	buildAMatr(nodeArray);
 }
 
 // saves the result in m1
@@ -364,35 +340,6 @@ void mul(GLdouble ** m1, GLdouble ** m2)
 	return;
 }
 
-void buildAMatr(KP *nodeArray)
-{
-	int i, j;
-	GLdouble s , c, ac, as, a, d;
-
-	for (i = 0; i < KP_NUMBER; i++)
-	{
-		s = sin(nodeArray[i].q);
-		c = cos(nodeArray[i].q);
-		as = sin(nodeArray[i].alpha);
-		ac = cos(nodeArray[i].alpha);
-		a = nodeArray[i].a;
-		d = nodeArray[i].d;
-
-		nodeArray[i].A[0][0]=c;
-		nodeArray[i].A[1][0] = s;
-		nodeArray[i].A[0][1] = -ac*s;
-		nodeArray[i].A[1][1] = ac*c;
-		nodeArray[i].A[0][2] = as*s;
-		nodeArray[i].A[1][2] = -as*c;
-		nodeArray[i].A[2][1] = as;
-		nodeArray[i].A[2][2] = ac;
-		nodeArray[i].A[0][3] = a*c;
-		nodeArray[i].A[1][3] = a*s;
-		nodeArray[i].A[2][3] = d;
-		nodeArray[i].A[3][3] = 1;
-	}
-}
-
 void setMatr(GLdouble ** dst, GLdouble ** src, int ord)
 {
 	int i, j;
@@ -400,62 +347,4 @@ void setMatr(GLdouble ** dst, GLdouble ** src, int ord)
 	for (j = 0; j < ord; j++) dst[i][j] = src[i][j];
 }
 
-Light::Light(GLfloat *color, GLfloat *n, GLfloat *pos, GLfloat *a, GLfloat *d, GLfloat *s, GLfloat *sdir,
-	GLfloat e, GLfloat coff, GLfloat k_c, GLfloat k_l, GLfloat k_q) {
-	RGB = color;
-
-	normal = n;
-	position = pos;
-	spdir = sdir;
-	cutoff = coff;
-	exp = e;
-
-	amb = a;
-	diff = d;
-	spec = s;
-	kc = k_c;
-	kl = k_l;
-	kq = k_q;
-}
-
-void Light::SetColor(GLfloat *color) {
-	RGB = color;
-}
-
-void Light::SetGeom(GLfloat *n, GLfloat *pos, GLfloat *sdir, GLfloat e, GLfloat coff) {
-	normal = n;
-	position = pos;
-	spdir = sdir;
-	cutoff = coff;
-	exp = e;
-}
-
-void Light::SetLightConf(GLfloat *a, GLfloat *d, GLfloat *s, GLfloat k_c, GLfloat k_l, GLfloat k_q) {
-	amb = a;
-	diff = d;
-	spec = s;
-	kc = k_c;
-	kl = k_l;
-	kq = k_q;
-}
-
-void Light::Enable() {
-	glMaterialfv(GL_FRONT, GL_AMBIENT, ma);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, md);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, ms);
-	glMaterialfv(GL_FRONT, GL_SHININESS, shine);
-	glColor3fv(RGB);
-	glEnable(GL_NORMALIZE);
-
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
-	glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, &cutoff);
-
-	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
-	glLightfv(GL_LIGHT0, GL_CONSTANT_ATTENUATION, &kc);
-	glLightfv(GL_LIGHT0, GL_LINEAR_ATTENUATION, &kl);
-	glLightfv(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, &kq);
-
-	glLightModelfv(GL_AMBIENT, ascene);
-}
+//
