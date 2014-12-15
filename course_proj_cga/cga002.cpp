@@ -1,14 +1,14 @@
 #include "KPairArray.h"
 #include "KinematicPair.h"
 #include "Light.h"
+#include "Link.h"
+#include "Camera.h"
 #include <random>
 #include <time.h>
 
 GLdouble SPEED = M_PI / 100000;
 GLdouble SPEED2 = M_PI / 10000;
 GLint pMode=GL_LINE; 
-GLint flag[5] = {0,0,0,0,0};
-GLdouble PI = M_PI;
 GLdouble A = SCREEN_WIDTH / 4.0, B = 0.0, C = SCREEN_HEIGHT / 2.0, D = C;
 GLfloat lcolr0[3] = { 1, 1, 1 },
 n0[3] = { 1, 1, 0 },
@@ -19,6 +19,8 @@ s0[4] = { 1, 1, 1, 1 },
 sd0[3] = { 0, 0, -1 };
 
 KPairArray *KPArray2;
+Link *linkArray;
+Camera *camera;
 
 Light l0(lcolr0, n0, pos0, a0, d0, s0, sd0, 0, M_PI, 1, 1, 1);
 
@@ -43,8 +45,8 @@ static void resize_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho( 0.0, width, 0.0, height, -pcside, pcside);
-	gluLookAt(0, 0, 0, 0, 1, 0, 0, 0, 1);
+	glOrtho( -width, width, -height, height, -pcside*10, pcside*10);
+	gluLookAt(0, -height/2, -300, 0, -1, -300, 0, 0, 1);
 
 	glMatrixMode(GL_MODELVIEW);
 
@@ -58,7 +60,8 @@ static void resize_callback(GLFWwindow* window, int width, int height)
 static void movef(GLfloat mov_x, GLfloat mov_y, GLfloat mov_z)
 {
 	glMatrixMode(GL_MODELVIEW);
-	glTranslatef(mov_x, mov_y, mov_z);
+	//glTranslatef(mov_x, mov_y, mov_z);
+	//gluLookAt(mov_x)
 	printf("You moved\n");
 }
 
@@ -75,29 +78,45 @@ static void keyboard_callback(GLFWwindow* window, int key, int scancode, int act
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
-	if (key == GLFW_KEY_LEFT)
+	if ((key == GLFW_KEY_LEFT) && ((action == GLFW_PRESS)||(action == GLFW_REPEAT)))
 	{
 		turnf(A * 2, C, 0.5, -M_PI / 4, 0, 0, SPEED);
+//		camera->rotateCam(-1, 0);
+		//gluLookAt(camera->eyex, camera->eyey, camera->eyez, 
+		//	camera->cntx, camera->cnty, camera->cntz, 
+		//	camera->upvx, camera->upvy, camera->upvz);
 	}
-	if (key == GLFW_KEY_RIGHT)
+	if ((key == GLFW_KEY_RIGHT) && ((action == GLFW_PRESS) || (action == GLFW_REPEAT)))
 	{
 		turnf(A * 2, C, 0.5, M_PI / 4, 0, 0, SPEED);
+		//camera->rotateCam(1, 0);
+		/*gluLookAt(camera->eyex, camera->eyey, camera->eyez,
+			camera->cntx, camera->cnty, camera->cntz,
+			camera->upvx, camera->upvy, camera->upvz);*/
 	}
 
-	if (key == GLFW_KEY_Z)
+	if ((key == GLFW_KEY_Z) && ((action == GLFW_PRESS) || (action == GLFW_REPEAT)))
 	{
 		turnf(A * 2, C, 0.5, M_PI / 4, SPEED, 0, 0);
+		/*camera->rotateCam(0, -1);
+		gluLookAt(camera->eyex, camera->eyey, camera->eyez,
+			camera->cntx, camera->cnty, camera->cntz,
+			camera->upvx, camera->upvy, camera->upvz);*/
 	}
 
-	if (key == GLFW_KEY_X)
+	if ((key == GLFW_KEY_X) && ((action == GLFW_PRESS) || (action == GLFW_REPEAT)))
 	{
 		turnf(A * 2, C, 0.5, -M_PI / 4, SPEED, 0, 0); //реализовать через gluLookAt!!!
+		/*camera->rotateCam(0, 1);
+		gluLookAt(camera->eyex, camera->eyey, camera->eyez,
+			camera->cntx, camera->cnty, camera->cntz,
+			camera->upvx, camera->upvy, camera->upvz);*/
 	}
-	if (key == GLFW_KEY_UP)
+	if (key == GLFW_KEY_UP && ((action == GLFW_PRESS) || (action == GLFW_REPEAT)))
 	{
 			movef(0, 10, 0);
 	}
-	if (key == GLFW_KEY_DOWN)
+	if (key == GLFW_KEY_DOWN && ((action == GLFW_PRESS) || (action == GLFW_REPEAT)))
 	{
 		movef(0, -10, 0);
 	}
@@ -133,38 +152,12 @@ static void error_callback(int error, const char* description)
 	fputs(description, stderr);
 }
 
-void drawKP2()
-{
-	char i;//, j;
-	//GLdouble** T = new PGLdouble[4];
-	//for (i = 0; i < 4; i++) T[i] = new GLdouble[4];
-	//for (i = 0; i < 4; i++)
-	//for (j = 0; j < 4; j++) T[i][j] = (i == j);
-
-	//glPointSize(10.0);
-	for (i = 0; i < KPArray2->getLength(); i++)
-	{
-		KPArray2->drawPair(i);
-		//glColor3d(1, 1, 0);
-		//glVertex3d(T[0][3], T[1][3], T[2][3]);
-	//	mul(T, KPArray2[i].A);
-		
-	//	glBegin(GL_POINTS);
-	//	glColor3d(0, 1, 1);
-	//	glVertex3d(T[0][3], T[1][3], T[2][3]);
-	//	glEnd();
-		
-	}
-	//for (i = 0; i < 4; i++) delete T[i];
-	//delete T;
-
-}
-
 void draw()
 {
-	int i;
+	int i,j,k,len;
 	GLdouble side=(A<C?A:C)/2;
-//	l0.Enable();
+	GLdouble **T0 = NULL, **T1 = NULL;
+	//l0.Enable();
 	//l0.Disable();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
@@ -177,34 +170,27 @@ void draw()
 
 	drawBackground();
 	drawAxis();
-
-	//drawKP(KPArray);
-	//drawKP2();
-	for (i = 0; i < KPArray2->getLength(); i++) KPArray2->drawPair(i);
-	for (i = 0; i < KPArray2->getLength(); i++)KPArray2->getPair(i).moveKP();
-	
-	//move(KPArray);	
-}
-
-KinematicPair * init()
-{
-	KinematicPair *KPArray2 = new KinematicPair[KP_NUMBER];
-	int i;
-	GLdouble a_init[KP_NUMBER]		= { 0, A1, A2, 0, 0, 0 };
-	GLdouble q_init[KP_NUMBER]		= { M_PI_2, 0, M_PI_2, 0, 0, 0 };
-	GLdouble d_init[KP_NUMBER]		= { 0, D1, 0, D3, 0, D5 };
-	GLdouble alpha_init[KP_NUMBER]	= { -M_PI_2, 0, M_PI_2, -M_PI_2, M_PI_2, 0 };
-	GLdouble minq_init[KP_NUMBER]	= { -160, -225, -45, -110, -100, -266 };
-	GLdouble maxq_init[KP_NUMBER]	= { 160, 45, 225, 170, 100, 266 };
-	for (i = 0; i < KP_NUMBER; i++) KPArray2[i].reInit(a_init[i],q_init[i],d_init[i],alpha_init[i],DEG_TO_RAD*minq_init[i],DEG_TO_RAD*maxq_init[i]);
-	return KPArray2;
+	len = KPArray2->getLength();	
+	for (i = 0; i < len; i++) KPArray2->drawPair(i);
+	for (i = 1; i < KP_NUMBER - 1; i++)
+	{
+		T0 = KPArray2->getTForPair(i);
+		T1 = KPArray2->getTForPair(i + 1);
+		linkArray[i].reGetT0andT1(T0, T1);
+		linkArray[i].buildMesh();
+		linkArray[i].drawLink();
+	}
+	//l0.Enable();
+	for (i = 0; i < len; i++) KPArray2->getPair(i).moveKP();	
 }
 
 int main(int argc, _TCHAR* argv[])
 {
 	int i, k;
 	KPArray2 = new KPairArray();
-	
+	camera = new Camera();
+	linkArray = new Link[KP_NUMBER];
+	for (i = 0; i < KP_NUMBER - 1; i++) linkArray->reInit(KPArray2->getTForPair(i), KPArray2->getTForPair(i+1), 50, 50);
 	// initialise GLFW
     if(!glfwInit())
 	{
@@ -256,7 +242,8 @@ int main(int argc, _TCHAR* argv[])
 	// clean up and exit
 	
     glfwTerminate();
-
+	//for (i = 0; i < KP_NUMBER; i++) linkArray[i].~Link();
+	//delete linkArray;
 	return 0;
 }
 //=============================================================
@@ -266,14 +253,14 @@ void drawAxis()
 {
 	glBegin(GL_LINES);
 	glColor3d(1, 0, 0);
-	glVertex3d(10, 10, 10);
-	glVertex3d(110, 10, 10);
+	glVertex3d(0, 0, 0);
+	glVertex3d(100, 0, 1);
 	glColor3d(0, 1, 0);
-	glVertex3d(10, 10, 10);
-	glVertex3d(10, 110, 10);
+	glVertex3d(0, 0, 0);
+	glVertex3d(0, 100, 1);
 	glColor3d(0, 0, 1);
-	glVertex3d(10, 10, 10);
-	glVertex3d(10, 10, 110);
+	glVertex3d(0, 0, 0);
+	glVertex3d(0, 0, 100);
 	glEnd();
 }
 
@@ -282,10 +269,10 @@ void drawBackground()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBegin(GL_QUADS);
 	glColor3d(0.5, 0.5, 0.5);
-	glVertex3d(0,0,5);
-	glVertex3d(0, A * 4, 5);
-	glVertex3d(A*4,A*4,5);
-	glVertex3d(A * 4, 0, 5);
+	glVertex3d(0,0,-660.4);
+	glVertex3d(0, A * 4, -660.4);
+	glVertex3d(A*4,A*4,-660.4);
+	glVertex3d(A * 4, 0, -660.4);
 	glEnd();
 }
 

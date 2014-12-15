@@ -31,9 +31,7 @@ typedef GLdouble* PGLdouble;
 
 typedef struct Point
 {
-	GLdouble	x;
-	GLdouble	y;
-	GLdouble	z;
+	GLdouble	xyz[3];
 	GLdouble	RGB[3];
 } Point;
 
