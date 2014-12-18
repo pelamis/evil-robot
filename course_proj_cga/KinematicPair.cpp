@@ -55,10 +55,10 @@ KinematicPair::~KinematicPair()
 void KinematicPair::setAMatrix()
 {
 	GLdouble s, c, ac, as;
-	s = sin(q);
-	c = cos(q);
-	as = sin(alpha);
-	ac = cos(alpha);
+	s = (abs(sin(q))<9*pow((double)10,(double)-15)) ? 0 : sin(q);
+	c = (abs(cos(q))<9 * pow((double)10, (double)-15)) ? 0 : cos(q);
+	as = (abs(sin(alpha))<9 * pow((double)10, (double)-15)) ? 0 : sin(alpha);
+	ac = (abs(cos(alpha))<9 * pow((double)10, (double)-15)) ? 0 : cos(alpha);
 
 	A[0][0] = c;
 	A[1][0] = s;

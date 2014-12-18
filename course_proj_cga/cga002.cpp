@@ -46,7 +46,7 @@ static void resize_callback(GLFWwindow* window, int width, int height)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho( -width, width, -height, height, -pcside*10, pcside*10);
-	gluLookAt(0, -height/2, -300, 0, -1, -300, 0, 0, 1);
+	gluLookAt(0, -300, 0, 1, 1, 1, 0, 0, 1);
 
 	glMatrixMode(GL_MODELVIEW);
 
@@ -168,11 +168,11 @@ void draw()
 	glPopMatrix();
 // draw here
 
-	drawBackground();
+	//drawBackground();
 	drawAxis();
 	len = KPArray2->getLength();	
 	for (i = 0; i < len; i++) KPArray2->drawPair(i);
-	for (i = 1; i < KP_NUMBER - 1; i++)
+	for (i = 0; i < KP_NUMBER - 1; i++)
 	{
 		T0 = KPArray2->getTForPair(i);
 		T1 = KPArray2->getTForPair(i + 1);
@@ -190,7 +190,7 @@ int main(int argc, _TCHAR* argv[])
 	KPArray2 = new KPairArray();
 	camera = new Camera();
 	linkArray = new Link[KP_NUMBER];
-	for (i = 0; i < KP_NUMBER - 1; i++) linkArray->reInit(KPArray2->getTForPair(i), KPArray2->getTForPair(i+1), 50, 50);
+	for (i = 0; i < KP_NUMBER - 1; i++) linkArray[i].reInit(KPArray2->getTForPair(i), KPArray2->getTForPair(i+1), 50, 50);
 	// initialise GLFW
     if(!glfwInit())
 	{
@@ -242,8 +242,6 @@ int main(int argc, _TCHAR* argv[])
 	// clean up and exit
 	
     glfwTerminate();
-	//for (i = 0; i < KP_NUMBER; i++) linkArray[i].~Link();
-	//delete linkArray;
 	return 0;
 }
 //=============================================================
@@ -269,10 +267,10 @@ void drawBackground()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBegin(GL_QUADS);
 	glColor3d(0.5, 0.5, 0.5);
-	glVertex3d(0,0,-660.4);
-	glVertex3d(0, A * 4, -660.4);
-	glVertex3d(A*4,A*4,-660.4);
-	glVertex3d(A * 4, 0, -660.4);
+	glVertex3d(-A*2, 0,-660.4);
+	glVertex3d(-A*2, A*2, -660.4);
+	glVertex3d(A*2,A*2,-660.4);
+	glVertex3d(A * 2,0, -660.4);
 	glEnd();
 }
 
@@ -308,6 +306,7 @@ void mul(GLdouble ** m1, GLdouble ** m2)
 	for (k = 0; k < 4;k++)
 	{
 		res[i][j] += m1[i][k] * m2[k][j];
+		if (abs(res[i][j]) < pow(10,-15)) res[i][j] = 0;
 	}
 	setMatr(m1, res, 4);
 	//for (i = 0; i < 4; i++)

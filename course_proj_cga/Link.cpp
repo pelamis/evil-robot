@@ -29,99 +29,72 @@ Link::~Link()
 void Link::buildMesh()
 {
 	int i,j,k;
+	int vSequence1[4] = { 0, 3, 4, 7 }, vSequence2[4] = { 1, 2, 5, 6 };
+	double x, y, z, t00,t01,t02,t10,t11,t12,t21,t22;
+
 	if (vertexes == NULL) vertexes = new Point[8];
-	vertexes[0].xyz[0] = T0[0][3] - side1 / 2;
-	vertexes[0].xyz[1] = T0[1][3];
-	vertexes[0].xyz[2] = T0[2][3] - side2 / 2;
-	
-	vertexes[4].xyz[0] = T1[0][3] - side1 / 2;
-	vertexes[4].xyz[1] = T1[1][3];
-	vertexes[4].xyz[2] = T1[2][3] - side2 / 2;
 
-	vertexes[1].xyz[0] = T0[0][3] - side1 / 2;
-	vertexes[1].xyz[1] = T0[1][3];
-	vertexes[1].xyz[2] = T0[2][3] + side2 / 2;
+	for (i = 0; i < 4;i++)
+	for (j = 0; j < 3; j++)
+	{
+	//	vertexes[i].xyz[j] = T0[j][3];
+		vertexes[4 + i].xyz[j] = T1[j][3];
+	}
 
-	vertexes[5].xyz[0] = T1[0][3] - side1 / 2;
-	vertexes[5].xyz[1] = T1[1][3];
-	vertexes[5].xyz[2] = T1[2][3] + side2 / 2;
+	for (i = 0; i < 2; i++)
+	{
+		vertexes[i].xyz[0] = -side1 / 2;
+		vertexes[4 + i].xyz[0] -= -side1 / 2;
+		vertexes[i + 2].xyz[0] = side1 / 2;
+		vertexes[6 + i].xyz[0] = side1 / 2;
+	}
+		
+	for (i = 0; i < 4; i++)
+	{
+		vertexes[vSequence1[i]].xyz[2] = -side2 / 2;
+		vertexes[vSequence2[i]].xyz[2] = side2 / 2;
 
-	vertexes[2].xyz[0] = T0[0][3] + side1 / 2;
-	vertexes[2].xyz[1] = T0[1][3];
-	vertexes[2].xyz[2] = T0[2][3] + side2 / 2;
+	}
 
-	vertexes[6].xyz[0] = T1[0][3] + side1 / 2;
-	vertexes[6].xyz[1] = T1[1][3];
-	vertexes[6].xyz[2] = T1[2][3] + side2 / 2;
-
-	vertexes[3].xyz[0] = T0[0][3] + side1 / 2;
-	vertexes[3].xyz[1] = T0[1][3];
-	vertexes[3].xyz[2] = T0[2][3] - side2 / 2;
-
-	vertexes[7].xyz[0] = T1[0][3] + side1 / 2;
-	vertexes[7].xyz[1] = T1[1][3];
-	vertexes[7].xyz[2] = T1[2][3] - side2 / 2;
+	for (i = 0; i < 8; i++)
+	{
+		x = vertexes[i].xyz[0];
+		y = vertexes[i].xyz[1];
+		z = vertexes[i].xyz[2];
+		//if (i < 4)
+		//{
+			vertexes[i].xyz[0] = x*T0[0][0] + y*T0[0][1] + z*T0[0][2] + T0[0][3];
+			vertexes[i].xyz[1] = x*T0[1][0] + y*T0[1][1] + z*T0[1][2] + T0[1][3];
+			vertexes[i].xyz[2] = x*T0[2][0] + y*T0[2][1] + z*T0[2][2] + T0[2][3];
+		//}
+		//else {
+		//	vertexes[i].xyz[0] = x*T0[0][0] + y*T0[0][1] + z*T0[0][2] + T1[0][3];
+		//	vertexes[i].xyz[1] = x*T0[1][0] + y*T0[1][1] + z*T0[1][2] + T1[1][3];
+		//	vertexes[i].xyz[2] = x*T0[2][0] + y*T0[2][1] + z*T0[2][2] + T1[2][3];
+		//}
+	}
 }
 
 void Link::drawLink()
 {
+	int vSequence[] = {0,1,2,3,
+						 7,6,5,4 ,
+						 3,2,6,7,
+						 4,5,1,0,
+						 1,5,6,2,
+						 3,7,4,0};
+	int i;
 	glLineWidth(1.0);
 	//glBegin(GL_LINES);
 //	glColor3d(1, 1, 0);
 	//	glVertex3d(T0[0][3], T0[1][3], T0[2][3]);
 	//	glVertex3d(T1[0][3], T1[1][3], T1[2][3]);
 //	glEnd();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	
 	glBegin(GL_QUADS);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[0].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[1].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[2].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[3].xyz);
-
-	glVertex3dv(vertexes[7].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[6].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[5].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[4].xyz);
-
-	glVertex3dv(vertexes[3].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[2].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[6].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[7].xyz);
-
-	glVertex3dv(vertexes[4].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[5].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[1].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[0].xyz);
-
-	glVertex3dv(vertexes[1].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[5].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[6].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[2].xyz);
-
-	glVertex3dv(vertexes[3].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[7].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[4].xyz);
-	glColor3d(1, 1, 1);
-	glVertex3dv(vertexes[0].xyz);
-
+		glColor3d(1, 1, 1);
+		for (i = 0; i < sizeof(vSequence)/sizeof(int); i++) glVertex3dv(vertexes[vSequence[i]].xyz);
 	glEnd();
 }
 
