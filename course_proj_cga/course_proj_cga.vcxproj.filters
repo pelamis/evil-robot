@@ -42,7 +42,7 @@
     <ClInclude Include="Camera.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="LinkArray.h">
+    <ClInclude Include="callbacks.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
@@ -68,7 +68,7 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="LinkArray.cpp">
+    <ClCompile Include="callbacks.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>

@@ -11,7 +11,7 @@ private:
 	GLdouble ** T0;
 	GLdouble ** T1;
 	Point *vertexes;
-	GLdouble side1, side2;
+	GLdouble side, len;
 	//material:light
 	//material:texture
 public:

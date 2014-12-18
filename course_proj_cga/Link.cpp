@@ -1,13 +1,12 @@
 #include "Link.h"
 
-
 Link::Link()
 {
 	vertexes = NULL;
 	this->T0 = NULL;
 	this->T1 = NULL;
-	this->side1 = 0;
-	this->side2 = 0;
+	this->side = 0;
+	this->len = 0;
 }
 
 void Link::reInit(GLdouble **T0, GLdouble **T1, GLdouble side1, GLdouble side2)
@@ -16,8 +15,8 @@ void Link::reInit(GLdouble **T0, GLdouble **T1, GLdouble side1, GLdouble side2)
 	vertexes = new Point[8];
 	this->T0 = T0;
 	this->T1 = T1;
-	this->side1 = side1;
-	this->side2 = side2;
+	this->side = side1;
+	this->len = side2;
 }
 
 
@@ -37,22 +36,22 @@ void Link::buildMesh()
 	for (i = 0; i < 4;i++)
 	for (j = 0; j < 3; j++)
 	{
-	//	vertexes[i].xyz[j] = T0[j][3];
-		vertexes[4 + i].xyz[j] = T1[j][3];
+		vertexes[i].xyz[j] = T0[j][3];
+		vertexes[4 + i].xyz[j] = T0[j][3]+side;
 	}
 
 	for (i = 0; i < 2; i++)
 	{
-		vertexes[i].xyz[0] = -side1 / 2;
-		vertexes[4 + i].xyz[0] -= -side1 / 2;
-		vertexes[i + 2].xyz[0] = side1 / 2;
-		vertexes[6 + i].xyz[0] = side1 / 2;
+		vertexes[i].xyz[0] -= side / 2;
+		vertexes[4 + i].xyz[0] -= side / 2;
+		vertexes[i + 2].xyz[0] += side / 2;
+		vertexes[6 + i].xyz[0] += side / 2;
 	}
 		
 	for (i = 0; i < 4; i++)
 	{
-		vertexes[vSequence1[i]].xyz[2] = -side2 / 2;
-		vertexes[vSequence2[i]].xyz[2] = side2 / 2;
+		vertexes[vSequence1[i]].xyz[2] -= side / 2;
+		vertexes[vSequence2[i]].xyz[2] += side / 2;
 
 	}
 
@@ -107,12 +106,12 @@ void Link::reGetT0andT1(GLdouble **T0, GLdouble **T1)
 		if (this->T0[i] != NULL) delete this->T0[i];
 		delete this->T0;
 	}
-	if (this->T1 != NULL)
-	{
-		for (i = 0; i < 4;i++)
-		if (this->T1[i] != NULL) delete this->T1[i];
-		delete this->T1;
-	}
+	//if (this->T1 != NULL)
+	//{
+	//	for (i = 0; i < 4;i++)
+	//	if (this->T1[i] != NULL) delete this->T1[i];
+	//	delete this->T1;
+	//}
 	this->T0 = T0;
-	this->T1 = T1;
+	//this->T1 = T1;
 }

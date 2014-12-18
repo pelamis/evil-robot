@@ -27,6 +27,9 @@
 #define D3 433.07	
 #define D5 56.25	
 #define DEG_TO_RAD M_PI/180
+#define SPEED  M_PI / 100000
+#define SPEED2  M_PI / 10000
+
 typedef GLdouble* PGLdouble;
 
 typedef struct Point
@@ -37,7 +40,6 @@ typedef struct Point
 
 void setMatr(GLdouble ** dst, GLdouble ** src, int ord);
 void mul(GLdouble ** m1, GLdouble ** m2);
-
 void drawAxis();
 void drawBackground();
 

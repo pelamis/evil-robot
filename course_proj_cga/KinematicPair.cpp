@@ -124,3 +124,9 @@ void KinematicPair::moveSwitch()
 	else printf_s("KP has been stopped\n");
 	isMoving = !isMoving;
 }
+
+
+GLdouble ** KinematicPair::getAPtr()
+{
+	return A;
+}

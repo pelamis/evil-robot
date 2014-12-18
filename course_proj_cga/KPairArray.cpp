@@ -38,9 +38,8 @@ GLdouble ** KPairArray::getTForPair(int pairNumber)
 	for (i = 0; i < 4; i++) T[i] = new GLdouble[4];
 	for (i = 0; i < 4; i++)
 	for (j = 0; j < 4; j++) T[i][j] = (i == j);
-	//WARNING!!!
 	if (pairNumber<length)
-	for (i = 0; i <= pairNumber; i++) mul(T, array[i].A);
+	for (i = 0; i <= pairNumber; i++) mul(T, array[i].getAPtr());
 	return T;
 }
 
