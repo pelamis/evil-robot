@@ -42,13 +42,25 @@ void Link::buildMesh()
 		{
 			if (axis[j] == 1) //на две другие оси "натягиваем" квадрат
 			{
+				vertexes[i].xyz[j] = T0[j][3];
+				vertexes[2+i].xyz[j] = T0[j][3];
+
 				vertexes[i].xyz[(j + 1) % 3] = T0[(j + 1) % 3][3] + side;
 				vertexes[i+1].xyz[(j + 2) % 3] = T0[(j + 2) % 3][3] + side;
 				vertexes[2+i].xyz[(j + 1) % 3] = T0[j][3] - side; //симметрично для i-й точки (отн. центра) расположенная точка
-				
+				vertexes[i + 3].xyz[(j + 2) % 3] = T0[(j + 2) % 3][3] - side;
 			}
 		}
 	}
+
+	for (i = 0; i < 4; i++)
+	{
+		for (j = 0; j < 3; j++)
+		{
+
+		}
+	}
+	
 	
 
 	//for (i = 0; i < 4; i++)
