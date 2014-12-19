@@ -68,7 +68,7 @@ void draw()
 	{
 		T0 = KPArray2->getTForPair(i);
 		T1 = KPArray2->getTForPair(i + 1);
-		linkArray[i].reGetT0andT1(T0, T1);
+		linkArray[i].reGetT0andAxis(T0, 0, T1[1][2], 0);
 		linkArray[i].buildMesh();
 		linkArray[i].drawLink();
 	}
@@ -82,7 +82,7 @@ int main(int argc, _TCHAR* argv[])
 	KPArray2 = new KPairArray();
 	camera = new Camera();
 	linkArray = new Link[KP_NUMBER];
-	for (i = 0; i < KP_NUMBER - 1; i++) linkArray[i].reInit(KPArray2->getTForPair(i), KPArray2->getTForPair(i+1), 50, 50);
+	//for (i = 0; i < KP_NUMBER - 1; i++) linkArray[i].reInit(KPArray2->getTForPair(i), KPArray2->getTForPair(i+1), 50, 50);
 	// initialise GLFW
     if(!glfwInit())
 	{
