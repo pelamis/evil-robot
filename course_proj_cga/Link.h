@@ -20,7 +20,7 @@ public:
 	void buildMesh();
 	void reInit(GLdouble **T0, GLdouble ax, GLdouble ay, GLdouble az, GLdouble side, GLdouble len);
 	void drawLink();
-	void reGetT0andAxis(GLdouble **T0, GLdouble ax, GLdouble ay, GLdouble az);
+	void reGetT0(GLdouble **T0);
 };
 
 #endif
