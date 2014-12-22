@@ -15,7 +15,7 @@ GLdouble A = SCREEN_WIDTH / 4.0, B = 0.0, C = SCREEN_HEIGHT / 2.0, D = C;
 KPairArray *KPArray2;
 Link *linkArray;
 Camera *camera;
-Light l0();
+Light *l0;
 
 
 void movef(GLfloat mov_x, GLfloat mov_y, GLfloat mov_z)
@@ -40,7 +40,7 @@ void draw()
 	int i,j,k,len;
 	GLdouble side = (A<C ? A : C) / 2;
 	GLdouble **T0 = NULL, **T1 = NULL;
-	//l0.Enable();
+	l0->Enable();
 	//l0.Disable();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
@@ -158,9 +158,11 @@ void init()
 	int i;
 	GLdouble lenSequence[KP_NUMBER] = {D1,-A1-50,A1,50,50,0};
 	GLdouble axisSequense[KP_NUMBER][3] = { {0,0,1}, {1,0,0}, {0,0,1}, {0,0,1}, {0,0,1}, {0,0,1} };
-	GLdouble offsetSequense[KP_NUMBER][3] = { { 100 * dl, 0, 25 * dl }, { 50, 0, 35 }, { 25, 70, -50 }, { 0, 25, 50 }, { 0, 25, 0 }, { 0, 0, 0 } };
+	//сделать так, чтобы смещение меняло точку "начала" звена
+	GLdouble offsetSequense[KP_NUMBER][3] = { { 100 * dl, 0, 25 * dl }, { 50, 0, 35 }, { 25, 70, -50 }, { 0, 25, 50 }, { 0, 75, 0 }, { 0, 0, 0 } };
 	GLdouble sidesSequense[KP_NUMBER][2] = { { 50, 50 }, { 50, 25 }, { 50, 25 }, { 50, 50 }, { 50, 50 }, { 10, 10 } };
 
+	l0 = new Light();
 	KPArray2 = new KPairArray();
 	camera = new Camera();
 	linkArray = new Link[KP_NUMBER];

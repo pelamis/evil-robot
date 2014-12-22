@@ -97,7 +97,7 @@ void Link::drawLink()
 	//	glVertex3d(T0[0][3], T0[1][3], T0[2][3]);
 	//	glVertex3d(T1[0][3], T1[1][3], T1[2][3]);
 //	glEnd();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	
 	glBegin(GL_QUADS);
 		glColor3d(1, 1, 1);
