@@ -85,12 +85,15 @@ void Link::buildMesh()
 void Link::drawLink()
 {
 	int vSequence[] = {0,1,2,3,
-						 7,6,5,4 ,
+						 7,6,5,4,
 						 3,2,6,7,
 						 4,5,1,0,
 						 1,5,6,2,
 						 3,7,4,0};
-	int i;
+	int i,j,ax;
+	GLdouble x1, x2, y1, y2, z1, z2;
+	for (i = 0; (axis[i] != 1)&&(i < 3); i++);
+	ax=i;
 	glLineWidth(1.0);
 	//glBegin(GL_LINES);
 //	glColor3d(1, 1, 0);
@@ -98,11 +101,35 @@ void Link::drawLink()
 	//	glVertex3d(T1[0][3], T1[1][3], T1[2][3]);
 //	glEnd();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	
-	glBegin(GL_QUADS);
+	//Сделать вычисление нормалей к поверхности!!!
+	//Polygons[i].normal.x = v1.y*v2.z - v2.y*v1.z;
+	//Polygons[i].normal.y = v2.x*v1.z - v1.x*v2.z;
+	//Polygons[i].normal.z = v1.x*v2.y - v1.y*v2.x;
+	for (i = 0; i < 1; i++)
+	{
+		//getting coords for normals calculating...
+		x1 = vertexes[vSequence[4 * i + 2]].xyz[(ax + 1) % 3] - vertexes[vSequence[4 * i + 3]].xyz[(ax + 1) % 3];
+		x2 = vertexes[vSequence[4 * i]].xyz[(ax + 1) % 3] - vertexes[vSequence[4 * i + 3]].xyz[(ax + 1) % 3];
+		y1 = vertexes[vSequence[4 * i + 2]].xyz[(ax + 2) % 3] - vertexes[vSequence[4 * i + 3]].xyz[(ax + 2) % 3];
+		y2 = vertexes[vSequence[4 * i]].xyz[(ax + 1) % 3] - vertexes[vSequence[4 * i + 3]].xyz[(ax + 1) % 3];
+		z1 = vertexes[vSequence[4 * i + 2]].xyz[ax] - vertexes[vSequence[4 * i + 3]].xyz[ax];
+		z2 = vertexes[vSequence[4 * i]].xyz[ax] - vertexes[vSequence[4 * i + 3]].xyz[ax];
+		glBegin(GL_LINES);
+			glColor3d(1, 0, 0);
+			glVertex3dv(vertexes[vSequence[4*i]].xyz);
+			glVertex3d(vertexes[vSequence[4 * i]].xyz[0] + (y1*z2 - y2*z1), 
+				vertexes[vSequence[4 * i]].xyz[1] + (x2*z1 - x1*x2), 
+				vertexes[vSequence[4 * i]].xyz[2]+(x1*y2 - x2*y1));
+		glEnd();
+		glBegin(GL_QUADS);
 		glColor3d(1, 1, 1);
-		for (i = 0; i < sizeof(vSequence)/sizeof(int); i++) glVertex3dv(vertexes[vSequence[i]].xyz);
-	glEnd();
+		glNormal3d(y1*z2-y2*z1, x2*z1-x1*x2, x1*y2-x2*y1);
+		for (j = 0; j < 4; j++)
+		{
+			glVertex3dv(vertexes[vSequence[4*i+j]].xyz);
+		}
+		glEnd();
+	}
 }
 
 void Link::reGetT0(GLdouble **T0)

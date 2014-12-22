@@ -40,7 +40,7 @@ void draw()
 	int i,j,k,len;
 	GLdouble side = (A<C ? A : C) / 2;
 	GLdouble **T0 = NULL, **T1 = NULL;
-	l0->Enable();
+	//l0->Enable();
 	//l0.Disable();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
@@ -62,7 +62,8 @@ void draw()
 		linkArray[i].buildMesh();
 		linkArray[i].drawLink();
 	}
-	//l0.Enable();
+	//glEnable(GL_NORMALIZE);
+	//l0->Enable();
 	for (i = 0; i < len; i++) KPArray2->getPair(i).moveKP();	
 }
 

@@ -4,18 +4,18 @@ Light::Light() {
 		
 		GLfloat lcolr0[3] = { 1, 1, 1 },
 		n0[3] = { 1, 1, 0 },
-		pos0[4] = { 100, 100, 100, 0 },
+		pos0[4] = { 0, 0, 1, 1 },
 		a0[4] = { 0.2, 0.2, 0.2, 1 },
 		d0[4] = { 1, 1, 1, 1 },
 		s0[4] = { 1, 1, 1, 1 },
-		sd0[3] = { -1, -1, -1 };
+		sd0[3] = { 0, 0, -1 };
 		
 		RGB = lcolr0;
 	
 		normal = n0;
 		position = pos0;
 		spdir = sd0;
-		cutoff = 0;
+		cutoff = 30;
 		exp = M_PI;
 	
 		amb = a0;
@@ -49,18 +49,18 @@ Light::Light() {
 	
 	void Light::Enable() {
 
-		GLfloat ma[4] = { 0.5, 0.5, 0.5, 1 };
-		GLfloat md[4] = { 0.2, 0.2, 0.8, 1 };
+		GLfloat ma[4] = { 0.2, 0.2, 0.2, 1.0 };
+		GLfloat md[4] = { 0.7, 0.7, 0.9, 1.0 };
 		GLfloat ms[4] = { 1.0, 1.0, 1.0, 1.0 };
-		GLfloat shine[1] = { 63 };
-		GLfloat ascene[4] = { 0, 0.5, 0.5, 1 };
+		GLfloat shine[1] = { 1 };
+		GLfloat ascene[4] = { 0, 0.2, 0.2, 1 };
 
-		glMaterialfv(GL_FRONT, GL_AMBIENT, ma);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, md);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, ms);
-		glMaterialfv(GL_FRONT, GL_SHININESS, shine);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ma);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, md);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, ms);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shine);
 		glColor3fv(RGB);
-		glEnable(GL_NORMALIZE);
+	//	glEnable(GL_NORMALIZE);
 	
 		glLightfv(GL_LIGHT0, GL_POSITION, position);
 		glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, &cutoff);
@@ -68,14 +68,15 @@ Light::Light() {
 		glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);
 		glLightfv(GL_LIGHT0, GL_SPECULAR, spec);
-		glLightfv(GL_LIGHT0, GL_CONSTANT_ATTENUATION, &kc);
-		glLightfv(GL_LIGHT0, GL_LINEAR_ATTENUATION, &kl);
-		glLightfv(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, &kq);
+	//	glLightfv(GL_LIGHT0, GL_CONSTANT_ATTENUATION, &kc);
+	//	glLightfv(GL_LIGHT0, GL_LINEAR_ATTENUATION, &kl);
+	//	glLightfv(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, &kq);
 	
 		glLightModelfv(GL_AMBIENT, ascene);
 
 		glEnable(GL_LIGHTING);
 		glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+		glEnable(GL_NORMALIZE);
 		glEnable(GL_LIGHT0);
 	}
 
