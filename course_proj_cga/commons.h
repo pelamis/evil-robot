@@ -22,7 +22,7 @@
 #define KP_NUMBER 6
 #define MAX 100
 #define A1 431.8	
-#define A2 20.32	
+#define A2 -20.32	
 #define D1 149.09	
 #define D3 433.07	
 #define D5 56.25	
@@ -38,6 +38,7 @@ typedef struct Point
 	GLdouble	RGB[3];
 } Point;
 
+void init();
 void setMatr(GLdouble ** dst, GLdouble ** src, int ord);
 void mul(GLdouble ** m1, GLdouble ** m2);
 void drawAxis();

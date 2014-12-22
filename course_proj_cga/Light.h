@@ -18,8 +18,7 @@ public:
 
 	char e = 0;
 
-	Light(GLfloat *color, GLfloat *n, GLfloat *pos, GLfloat *a, GLfloat *d, GLfloat *s, GLfloat *sdir,
-		GLfloat e, GLfloat coff, GLfloat k_c, GLfloat k_l, GLfloat k_q);
+	Light();
 	void SetColor(GLfloat *color);
 	void SetGeom(GLfloat *n, GLfloat *pos, GLfloat *sdir, GLfloat e, GLfloat coff);
 	void SetLightConf(GLfloat *a, GLfloat *d, GLfloat *s, GLfloat k_c, GLfloat k_l, GLfloat k_q);

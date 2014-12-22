@@ -7,25 +7,16 @@
 #include <time.h>
 #include "callbacks.h"
 
-//GLdouble SPEED = M_PI / 100000;
-//GLdouble SPEED2 = M_PI / 10000;
+#define dl cos(M_PI_4)
+
 GLint pMode=GL_LINE; 
 GLdouble A = SCREEN_WIDTH / 4.0, B = 0.0, C = SCREEN_HEIGHT / 2.0, D = C;
-GLfloat lcolr0[3] = { 1, 1, 1 },
-n0[3] = { 1, 1, 0 },
-pos0[4] = { 10, 10, 10, 0 },
-a0[4] = { 0.2, 0.2, 0.2, 1 },
-d0[4] = { 1, 1, 1, 1 },
-s0[4] = { 1, 1, 1, 1 },
-sd0[3] = { 0, 0, -1 };
 
 KPairArray *KPArray2;
 Link *linkArray;
 Camera *camera;
+Light l0();
 
-Light l0(lcolr0, n0, pos0, a0, d0, s0, sd0, 0, M_PI, 1, 1, 1);
-
-//callbacks here
 
 void movef(GLfloat mov_x, GLfloat mov_y, GLfloat mov_z)
 {
@@ -67,7 +58,6 @@ void draw()
 	for (i = 0; i < KP_NUMBER - 1; i++)
 	{
 		T0 = KPArray2->getTForPair(i);
-		//T1 = KPArray2->getTForPair(i + 1);
 		linkArray[i].reGetT0(T0);
 		linkArray[i].buildMesh();
 		linkArray[i].drawLink();
@@ -79,10 +69,7 @@ void draw()
 int main(int argc, _TCHAR* argv[])
 {
 	int i, k;
-	KPArray2 = new KPairArray();
-	camera = new Camera();
-	linkArray = new Link[KP_NUMBER];
-	for (i = 0; i < KP_NUMBER - 1; i++) linkArray[i].reInit(NULL,0,0,1,50,50);
+	init();
 	// initialise GLFW
     if(!glfwInit())
 	{
@@ -166,27 +153,24 @@ void drawBackground()
 	glEnd();
 }
 
+void init()
+{
+	int i;
+	GLdouble lenSequence[KP_NUMBER] = {D1,-A1-50,A1,50,50,0};
+	GLdouble axisSequense[KP_NUMBER][3] = { {0,0,1}, {1,0,0}, {0,0,1}, {0,0,1}, {0,0,1}, {0,0,1} };
+	GLdouble offsetSequense[KP_NUMBER][3] = { { 100 * dl, 0, 25 * dl }, { 50, 0, 35 }, { 25, 70, -50 }, { 0, 25, 50 }, { 0, 25, 0 }, { 0, 0, 0 } };
+	GLdouble sidesSequense[KP_NUMBER][2] = { { 50, 50 }, { 50, 25 }, { 50, 25 }, { 50, 50 }, { 50, 50 }, { 10, 10 } };
+
+	KPArray2 = new KPairArray();
+	camera = new Camera();
+	linkArray = new Link[KP_NUMBER];
+	for (i = 0; i < KP_NUMBER - 1; i++) linkArray[i].reInit(NULL, axisSequense[i], offsetSequense[i], sidesSequense[i][0], sidesSequense[i][1], lenSequence[i]);
+}
+
 // saves the result in m1
 void mul(GLdouble ** m1, GLdouble ** m2)
 {
 	int i, j, k;
-	//for (i = 0; i < 4; i++)
-	//{
-	//	for (j = 0; j < 4; j++)
-	//	{
-	//		printf_s("%lf\t", m1[i][j]);
-	//	}
-	//	printf_s("\n");
-	//}
-	//printf_s("\n\n");
-	//for (i = 0; i < 4; i++)
-	//{
-	//	for (j = 0; j < 4; j++)
-	//	{
-	//		printf_s("%lf\t", m2[i][j]);
-	//	}
-	//	printf_s("\n\n");
-	//}
 
 	GLdouble **res = new PGLdouble[4];
 	for (i = 0; i < 4; i++) res[i] = new GLdouble[4];
@@ -201,15 +185,7 @@ void mul(GLdouble ** m1, GLdouble ** m2)
 		if (abs(res[i][j]) < pow(10,-15)) res[i][j] = 0;
 	}
 	setMatr(m1, res, 4);
-	//for (i = 0; i < 4; i++)
-	//{
-	//	for (j = 0; j < 4; j++)
-	//	{
-	//		printf_s("%lf\t", m1[i][j]);
-	//	}
-	//	printf_s("\n");
-	//}
-	//printf_s("\n\n");
+
 	for (i = 0; i < 4; i++) delete res[i];
 	delete res;
 	return;

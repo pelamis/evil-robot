@@ -9,16 +9,16 @@ class Link
 {
 private:
 	GLdouble ** T0;
-	GLdouble *axis;
+	GLdouble *axis,*offset;
 	Point *vertexes;
-	GLdouble side, len;
+	GLdouble side1, side2, len;
 	//material:light
 	//material:texture
 public:
 	Link();
 	~Link();
 	void buildMesh();
-	void reInit(GLdouble **T0, GLdouble ax, GLdouble ay, GLdouble az, GLdouble side, GLdouble len);
+	void reInit(GLdouble **T0, GLdouble *ax, GLdouble *offs, GLdouble side1, GLdouble side2, GLdouble len);
 	void drawLink();
 	void reGetT0(GLdouble **T0);
 };
