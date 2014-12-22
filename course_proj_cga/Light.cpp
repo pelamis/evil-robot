@@ -1,28 +1,29 @@
 #include "Light.h"
 
-
-GLfloat ma[4] = { 0.5, 0.5, 0.5, 1 };
-GLfloat md[4] = { 0.2, 0.2, 0.8, 1 };
-GLfloat ms[4] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat shine[1] = { 63 };
-GLfloat ascene[4] = { 0, 0.5, 0.5, 1 };
-
-Light::Light(GLfloat *color, GLfloat *n, GLfloat *pos, GLfloat *a, GLfloat *d, GLfloat *s, GLfloat *sdir,
-		GLfloat e, GLfloat coff, GLfloat k_c, GLfloat k_l, GLfloat k_q) {
-		RGB = color;
+Light::Light() {
+		
+		GLfloat lcolr0[3] = { 1, 1, 1 },
+		n0[3] = { 1, 1, 0 },
+		pos0[4] = { 10, 10, 10, 0 },
+		a0[4] = { 0.2, 0.2, 0.2, 1 },
+		d0[4] = { 1, 1, 1, 1 },
+		s0[4] = { 1, 1, 1, 1 },
+		sd0[3] = { 0, 0, -1 };
+		
+		RGB = lcolr0;
 	
-		normal = n;
-		position = pos;
-		spdir = sdir;
-		cutoff = coff;
-		exp = e;
+		normal = n0;
+		position = pos0;
+		spdir = sd0;
+		cutoff = 0;
+		exp = M_PI;
 	
-		amb = a;
-		diff = d;
-		spec = s;
-		kc = k_c;
-		kl = k_l;
-		kq = k_q;
+		amb = a0;
+		diff = d0;
+		spec = s0;
+		kc = 1;
+		kl = 1;
+		kq = 1;
 	}
 	
 	void Light::SetColor(GLfloat *color) {
@@ -47,6 +48,13 @@ Light::Light(GLfloat *color, GLfloat *n, GLfloat *pos, GLfloat *a, GLfloat *d, G
 	}
 	
 	void Light::Enable() {
+
+		GLfloat ma[4] = { 0.5, 0.5, 0.5, 1 };
+		GLfloat md[4] = { 0.2, 0.2, 0.8, 1 };
+		GLfloat ms[4] = { 1.0, 1.0, 1.0, 1.0 };
+		GLfloat shine[1] = { 63 };
+		GLfloat ascene[4] = { 0, 0.5, 0.5, 1 };
+
 		glMaterialfv(GL_FRONT, GL_AMBIENT, ma);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, md);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, ms);
