@@ -24,6 +24,7 @@ void Link::reInit(GLdouble **T0, GLdouble *ax, GLdouble *offs, GLdouble side1, G
 		this->axis[i] = ax[i]; 
 		this->offset[i] = offs[i];
 	}
+	this->polygons = new Polygon*[6];
 	this->side1 = side1;
 	this->side2 = side2;
 	this->len = len;
@@ -32,9 +33,12 @@ void Link::reInit(GLdouble **T0, GLdouble *ax, GLdouble *offs, GLdouble side1, G
 
 Link::~Link()
 {
+	int i;
 	delete vertexes;
 	delete axis;
 	delete offset;
+	for (i = 0; i < 6; i++) delete polygons[i];
+	delete polygons;
 }
 
 //BEWARE OF MORONS!!!
@@ -78,7 +82,6 @@ void Link::buildMesh()
 		vertexes[i].xyz[0] = x*T0[0][0] + y*T0[0][1] + z*T0[0][2] + T0[0][3];
 		vertexes[i].xyz[1] = x*T0[1][0] + y*T0[1][1] + z*T0[1][2] + T0[1][3];
 		vertexes[i].xyz[2] = x*T0[2][0] + y*T0[2][1] + z*T0[2][2] + T0[2][3];
-		
 	}
 }
 
@@ -92,8 +95,14 @@ void Link::drawLink()
 						 3,7,4,0};
 	int i,j,ax;
 	GLdouble x1, x2, y1, y2, z1, z2;
-	for (i = 0; (axis[i] != 1)&&(i < 3); i++);
-	ax=i;
+	for (i = 0; i < 6; i++)
+	{
+		polygons[i] = new Polygon(&vertexes[vSequence[4 * i]], &vertexes[vSequence[4 * i + 1]],
+								  &vertexes[vSequence[4 * i + 2]], &vertexes[vSequence[4 * i + 3]]);
+		polygons[i]->getNormal();
+	}
+	//for (i = 0; (axis[i] != 1)&&(i < 3); i++);
+	//ax=i;
 	glLineWidth(1.0);
 	//glBegin(GL_LINES);
 //	glColor3d(1, 1, 0);
@@ -101,34 +110,20 @@ void Link::drawLink()
 	//	glVertex3d(T1[0][3], T1[1][3], T1[2][3]);
 //	glEnd();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//Сделать вычисление нормалей к поверхности!!!
-	//Polygons[i].normal.x = v1.y*v2.z - v2.y*v1.z;
-	//Polygons[i].normal.y = v2.x*v1.z - v1.x*v2.z;
-	//Polygons[i].normal.z = v1.x*v2.y - v1.y*v2.x;
-	for (i = 0; i < 1; i++)
+	for (i = 0; i < 6; i++)
 	{
-		//getting coords for normals calculating...
-		x1 = vertexes[vSequence[4 * i + 2]].xyz[(ax + 1) % 3] - vertexes[vSequence[4 * i + 3]].xyz[(ax + 1) % 3];
-		x2 = vertexes[vSequence[4 * i]].xyz[(ax + 1) % 3] - vertexes[vSequence[4 * i + 3]].xyz[(ax + 1) % 3];
-		y1 = vertexes[vSequence[4 * i + 2]].xyz[(ax + 2) % 3] - vertexes[vSequence[4 * i + 3]].xyz[(ax + 2) % 3];
-		y2 = vertexes[vSequence[4 * i]].xyz[(ax + 1) % 3] - vertexes[vSequence[4 * i + 3]].xyz[(ax + 1) % 3];
-		z1 = vertexes[vSequence[4 * i + 2]].xyz[ax] - vertexes[vSequence[4 * i + 3]].xyz[ax];
-		z2 = vertexes[vSequence[4 * i]].xyz[ax] - vertexes[vSequence[4 * i + 3]].xyz[ax];
-		glBegin(GL_LINES);
+
+		/*glBegin(GL_LINES);
 			glColor3d(1, 0, 0);
-			glVertex3dv(vertexes[vSequence[4*i]].xyz);
-			glVertex3d(vertexes[vSequence[4 * i]].xyz[0] + (y1*z2 - y2*z1), 
-				vertexes[vSequence[4 * i]].xyz[1] + (x2*z1 - x1*x2), 
-				vertexes[vSequence[4 * i]].xyz[2]+(x1*y2 - x2*y1));
-		glEnd();
-		glBegin(GL_QUADS);
-		glColor3d(1, 1, 1);
-		glNormal3d(y1*z2-y2*z1, x2*z1-x1*x2, x1*y2-x2*y1);
-		for (j = 0; j < 4; j++)
-		{
-			glVertex3dv(vertexes[vSequence[4*i+j]].xyz);
-		}
-		glEnd();
+		glEnd();*/
+		//glBegin(GL_QUADS);
+		//glColor3d(1, 1, 1);
+		//glNormal3d(y1*z2-y2*z1, x2*z1-x1*x2, x1*y2-x2*y1);
+		//for (j = 0; j < 4; j++)
+		//{
+		//	glVertex3dv(vertexes[vSequence[4*i+j]].xyz);
+		//}
+		//glEnd();
 	}
 }
 

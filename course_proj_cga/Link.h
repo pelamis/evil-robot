@@ -4,6 +4,7 @@
 
 #include "commons.h"
 #include "KPairArray.h"
+#include "Polygon.h"
 
 class Link
 {
@@ -11,6 +12,7 @@ private:
 	GLdouble ** T0;
 	GLdouble *axis,*offset;
 	Point *vertexes;
+	Polygon **polygons;
 	GLdouble side1, side2, len;
 	//material:light
 	//material:texture

@@ -35,8 +35,10 @@ typedef GLdouble* PGLdouble;
 typedef struct Point
 {
 	GLdouble	xyz[3];
-	GLdouble	RGB[3];
+	//GLdouble	RGB[3];
 } Point;
+
+typedef Point Vector;
 
 void init();
 void setMatr(GLdouble ** dst, GLdouble ** src, int ord);
