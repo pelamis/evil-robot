@@ -55,7 +55,7 @@ void draw()
 	drawAxis();
 	len = KPArray2->getLength();	
 	for (i = 0; i < len; i++) KPArray2->drawPair(i);
-	for (i = 0; i < KP_NUMBER - 1; i++)
+	for (i = 0; i < 1; i++)
 	{
 		T0 = KPArray2->getTForPair(i);
 		linkArray[i].reGetT0(T0);

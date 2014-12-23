@@ -25,6 +25,7 @@ void Link::reInit(GLdouble **T0, GLdouble *ax, GLdouble *offs, GLdouble side1, G
 		this->offset[i] = offs[i];
 	}
 	this->polygons = new Polygon*[6];
+	for (i = 0; i < 6; i++) polygons[i] = NULL;
 	this->side1 = side1;
 	this->side2 = side2;
 	this->len = len;
@@ -97,8 +98,9 @@ void Link::drawLink()
 	GLdouble x1, x2, y1, y2, z1, z2;
 	for (i = 0; i < 6; i++)
 	{
-		polygons[i] = new Polygon(&vertexes[vSequence[4 * i]], &vertexes[vSequence[4 * i + 1]],
-								  &vertexes[vSequence[4 * i + 2]], &vertexes[vSequence[4 * i + 3]]);
+		if (polygons[i]==NULL)
+			polygons[i] = new Polygon(&vertexes[vSequence[4 * i]], &vertexes[vSequence[4 * i + 1]],
+									  &vertexes[vSequence[4 * i + 2]], &vertexes[vSequence[4 * i + 3]]);
 		polygons[i]->getNormal();
 	}
 	//for (i = 0; (axis[i] != 1)&&(i < 3); i++);
@@ -110,8 +112,10 @@ void Link::drawLink()
 	//	glVertex3d(T1[0][3], T1[1][3], T1[2][3]);
 //	glEnd();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < 1; i++)
 	{
+		polygons[i]->drawPolygon();
+		polygons[i]->drawNormal();
 
 		/*glBegin(GL_LINES);
 			glColor3d(1, 0, 0);

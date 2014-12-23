@@ -18,15 +18,16 @@ void Polygon::getNormal()
 		v0.xyz[i] = p1->xyz[i] - p0->xyz[i];
 		v1.xyz[i] = p3->xyz[i] - p0->xyz[i];
 	}
-	normal.xyz[0] = v0.xyz[1] * v1.xyz[2] - v0.xyz[2] * v1.xyz[1];
-	normal.xyz[1] = v0.xyz[0] * v1.xyz[2] - v0.xyz[2] * v1.xyz[0];
-	normal.xyz[2] = v0.xyz[0] * v1.xyz[1] - v0.xyz[1] * v1.xyz[0];
+	normal.xyz[0] = (v0.xyz[1] * v1.xyz[2] - v0.xyz[2] * v1.xyz[1]);
+	normal.xyz[1] = (v0.xyz[0] * v1.xyz[2] - v0.xyz[2] * v1.xyz[0]);
+	normal.xyz[2] = (v0.xyz[0] * v1.xyz[1] - v0.xyz[1] * v1.xyz[0]);
 }
 
 void Polygon::drawPolygon()
 {
 	glBegin(GL_QUADS);
 		glColor3d(1, 1, 1);
+		glNormal3dv(normal.xyz);
 		glVertex3dv(p0->xyz);
 		glVertex3dv(p1->xyz);
 		glVertex3dv(p2->xyz);
