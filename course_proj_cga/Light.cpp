@@ -3,10 +3,10 @@
 Light::Light() {
 		
 		GLfloat lcolr0[3] = { 1, 1, 1 },
-		n0[3] = { 1, 1, 0 },
-		pos0[4] = { 0, 0, 1, 1 },
-		a0[4] = { 0.2, 0.2, 0.2, 1 },
-		d0[4] = { 1, 1, 1, 1 },
+		n0[3] = { 0, 0, -1 },
+		pos0[4] = { -1, 0, -1, 0 },
+		a0[4] = { 0.5, 0.5, 0.5, 1 },
+		d0[4] = { 0.7, 0.7, 0.7, 1 },
 		s0[4] = { 1, 1, 1, 1 },
 		sd0[3] = { 0, 0, -1 };
 		
@@ -49,11 +49,11 @@ Light::Light() {
 	
 	void Light::Enable() {
 
-		GLfloat ma[4] = { 0.2, 0.2, 0.2, 1.0 };
-		GLfloat md[4] = { 0.7, 0.7, 0.9, 1.0 };
+		GLfloat ma[4] = { 0.5, 0.5, 0.5, 1.0 };
+		GLfloat md[4] = { 0.7, 0.7, 0.7, 1.0 };
 		GLfloat ms[4] = { 1.0, 1.0, 1.0, 1.0 };
-		GLfloat shine[1] = { 1 };
-		GLfloat ascene[4] = { 0, 0.2, 0.2, 1 };
+		GLfloat shine[1] = { 0.5 };
+		GLfloat ascene[4] = {0.2, 0.2, 0.2, 1};
 
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ma);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, md);
@@ -63,7 +63,7 @@ Light::Light() {
 	//	glEnable(GL_NORMALIZE);
 	
 		glLightfv(GL_LIGHT0, GL_POSITION, position);
-		glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, &cutoff);
+		//glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, &cutoff);
 	
 		glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, diff);

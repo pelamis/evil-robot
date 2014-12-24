@@ -51,19 +51,19 @@ void draw()
 	glPopMatrix();
 // draw here
 
-	//drawBackground();
+	drawBackground();
 	drawAxis();
 	len = KPArray2->getLength();	
 	for (i = 0; i < len; i++) KPArray2->drawPair(i);
-	for (i = 0; i < 1; i++)
+	for (i = 1; i < 2; i++)
 	{
 		T0 = KPArray2->getTForPair(i);
 		linkArray[i].reGetT0(T0);
 		linkArray[i].buildMesh();
 		linkArray[i].drawLink();
 	}
-	//glEnable(GL_NORMALIZE);
-	//l0->Enable();
+	glEnable(GL_NORMALIZE);
+	l0->Enable();
 	for (i = 0; i < len; i++) KPArray2->getPair(i).moveKP();	
 }
 
@@ -146,6 +146,7 @@ void drawBackground()
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBegin(GL_QUADS);
+	glNormal3d(0, 0, 1);
 	glColor3d(0.5, 0.5, 0.5);
 	glVertex3d(-A * 2, 0, -660.4);
 	glVertex3d(-A * 2, A * 2, -660.4);

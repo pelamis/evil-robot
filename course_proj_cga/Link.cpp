@@ -46,8 +46,8 @@ Link::~Link()
 void Link::buildMesh()
 {
 	int i,j;
-	int coords[4][2] = { { -side1*sin(M_PI_4), side2*cos(M_PI_4) }, { side1*cos(M_PI_4), side2*sin(M_PI_4)}, 
-						{ side1*sin(M_PI_4), -side2*cos(M_PI_4) }, { -side1*cos(M_PI_4), -side2*sin(M_PI_4) } };
+	int coords[4][2] = { { side1/2, -side2/2 }, { side1/2, side2/2}, 
+						{ -side1/2, side2/2 }, { -side1/2, -side2/2 } };
 	double x, y, z;
 
 	if (vertexes == NULL) vertexes = new Point[8];
@@ -95,39 +95,20 @@ void Link::drawLink()
 						 1,5,6,2,
 						 3,7,4,0};
 	int i,j,ax;
-	GLdouble x1, x2, y1, y2, z1, z2;
 	for (i = 0; i < 6; i++)
 	{
 		if (polygons[i]==NULL)
 			polygons[i] = new Polygon(&vertexes[vSequence[4 * i]], &vertexes[vSequence[4 * i + 1]],
-									  &vertexes[vSequence[4 * i + 2]], &vertexes[vSequence[4 * i + 3]]);
+									  &vertexes[vSequence[4 * i + 2]], &vertexes[vSequence[4 * i + 3]],axis[0],axis[1],axis[2]);
 		polygons[i]->getNormal();
 	}
-	//for (i = 0; (axis[i] != 1)&&(i < 3); i++);
-	//ax=i;
 	glLineWidth(1.0);
-	//glBegin(GL_LINES);
-//	glColor3d(1, 1, 0);
-	//	glVertex3d(T0[0][3], T0[1][3], T0[2][3]);
-	//	glVertex3d(T1[0][3], T1[1][3], T1[2][3]);
-//	glEnd();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	for (i = 0; i < 1; i++)
+	
+	for (i = 0; i < 6; i++)
 	{
 		polygons[i]->drawPolygon();
-		polygons[i]->drawNormal();
-
-		/*glBegin(GL_LINES);
-			glColor3d(1, 0, 0);
-		glEnd();*/
-		//glBegin(GL_QUADS);
-		//glColor3d(1, 1, 1);
-		//glNormal3d(y1*z2-y2*z1, x2*z1-x1*x2, x1*y2-x2*y1);
-		//for (j = 0; j < 4; j++)
-		//{
-		//	glVertex3dv(vertexes[vSequence[4*i+j]].xyz);
-		//}
-		//glEnd();
+		//polygons[i]->drawNormal();
 	}
 }
 
